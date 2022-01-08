@@ -1,9 +1,7 @@
 const Potion = require('../lib/Potion.js');
+const Player = require('../lib/Player.js');
 
 jest.mock('../lib/Potion.js');
-console.log(new Potion());
-
-const Player = require('../lib/Player.js');
 
 test('creates a player object', () => {
     const player = new Player('Dave');
@@ -66,4 +64,25 @@ test("subtracts from player's health", () => {
     player.reduceHealth(99999);
 
     expect(player.health).toBe(0);
+});
+
+// check that a Potion was added correctly
+test('adds a potion to the inventory', () => {
+    const player = new Player('Dave');
+    const oldCount = player.inventory.length;
+
+    player.addPotion(new Potion());
+
+    expect(player.inventory.length).toBeGreaterThan(oldCount);
+});
+
+// tests that ensure that usePotion() removes the correct Potion from the Player inventory
+test('uses a potion from inventory', () => {
+    const player = new Player('Dave');
+    player.inventory = [new Potion(), new Potion(), new Potion()];
+    const oldCount = player.inventory.length;
+
+    player.usePotion(1);
+
+    expect(player.inventory.length).toBeLessThan(oldCount);
 });
